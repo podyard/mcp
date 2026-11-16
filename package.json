@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.2",
-    "@podyard/sdk": "file:../podyard-sdk",
+    "@podyard/sdk": "file:../podyard-sdk/podyard-sdk-0.1.0.tgz",
     "@t3-oss/env-core": "^0.13.11",
     "zod": "^4.3.6"
   },
