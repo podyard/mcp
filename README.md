@@ -1,4 +1,6 @@
-# @podyard/mcp
+![Podyard](banner.jpg)
+
+# Podyard MCP
 
 Podyard MCP (Model Context Protocol) server. Exposes the Podyard API to
 MCP-capable clients (Claude Desktop, Cursor, OpenCode, any MCP harness) over

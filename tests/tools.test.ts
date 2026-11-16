@@ -34,10 +34,13 @@ function makeClient(overrides: Record<string, unknown> = {}) {
         read: record("pods.fs.read"),
         write: record("pods.fs.write"),
         list: record("pods.fs.list"),
+        delete: record("pods.fs.delete"),
       },
       snapshot: record("pods.snapshot"),
       listSnapshots: record("pods.listSnapshots"),
       fork: record("pods.fork"),
+      sleep: record("pods.sleep"),
+      wake: record("pods.wake"),
     },
     snapshots: {
       get: record("snapshots.get"),
@@ -47,6 +50,7 @@ function makeClient(overrides: Record<string, unknown> = {}) {
       list: record("templates.list"),
       get: record("templates.get"),
       create: record("templates.create"),
+      delete: record("templates.delete"),
     },
     usage: {
       list: record("usage.list"),
@@ -54,6 +58,18 @@ function makeClient(overrides: Record<string, unknown> = {}) {
     limits: {
       get: record("limits.get"),
     },
+    webhooks: {
+      list: record("webhooks.list"),
+      get: record("webhooks.get"),
+      create: record("webhooks.create"),
+      delete: record("webhooks.delete"),
+    },
+    keys: {
+      list: record("keys.list"),
+      create: record("keys.create"),
+      revoke: record("keys.revoke"),
+    },
+    execStream: record("execStream"),
   };
 
   return client as unknown as Parameters<typeof registerPodyardTools>[1];
@@ -109,6 +125,9 @@ describe("registerPodyardTools", () => {
         "podyard_fs_read",
         "podyard_fs_write",
         "podyard_fs_list",
+        "podyard_fs_delete",
+        "podyard_sleep",
+        "podyard_wake",
         "podyard_snapshot",
         "podyard_list_snapshots",
         "podyard_get_snapshot",
@@ -116,11 +135,20 @@ describe("registerPodyardTools", () => {
         "podyard_list_templates",
         "podyard_get_template",
         "podyard_create_template",
+        "podyard_delete_template",
+        "podyard_exec_stream",
+        "podyard_list_webhooks",
+        "podyard_get_webhook",
+        "podyard_create_webhook",
+        "podyard_delete_webhook",
+        "podyard_list_keys",
+        "podyard_create_key",
+        "podyard_revoke_key",
         "podyard_usage",
         "podyard_limits",
       ])
     );
-    expect(TOOLS).toHaveLength(17);
+    expect(TOOLS).toHaveLength(29);
   });
 
   it("creates the server without a transport and no API key requirement", async () => {
@@ -283,5 +311,160 @@ describe("tool behavior", () => {
     const server = await makeServerWithTools(client);
     await callTool(server, "podyard_usage", { cursor: "c1", limit: 5 });
     expect(client.calls["usage.list"][0]).toEqual([{ cursor: "c1", limit: 5 }]);
+  });
+
+  it("podyard_fs_delete calls pods.fs.delete and reports the path", async () => {
+    const client = makeClient({ "pods.fs.delete": undefined });
+    const server = await makeServerWithTools(client);
+    const res = await callTool(server, "podyard_fs_delete", {
+      podId: "pod_1",
+      path: "/tmp/tmp.txt",
+    });
+    expect(client.calls["pods.fs.delete"][0]).toEqual([
+      "pod_1",
+      "/tmp/tmp.txt",
+    ]);
+    expect(JSON.parse((res as any).content[0].text)).toEqual({
+      deleted: "/tmp/tmp.txt",
+    });
+  });
+
+  it("podyard_sleep and podyard_wake call the pod lifecycle methods", async () => {
+    const client = makeClient({
+      "pods.sleep": { id: "pod_1", status: "sleeping" },
+      "pods.wake": { id: "pod_1", status: "running" },
+    });
+    const server = await makeServerWithTools(client);
+    const sleepRes = await callTool(server, "podyard_sleep", {
+      podId: "pod_1",
+    });
+    const wakeRes = await callTool(server, "podyard_wake", { podId: "pod_1" });
+    expect(client.calls["pods.sleep"][0]).toEqual(["pod_1"]);
+    expect(JSON.parse((sleepRes as any).content[0].text).status).toBe(
+      "sleeping"
+    );
+    expect(client.calls["pods.wake"][0]).toEqual(["pod_1"]);
+    expect(JSON.parse((wakeRes as any).content[0].text).status).toBe("running");
+  });
+
+  it("podyard_delete_template calls templates.delete", async () => {
+    const client = makeClient({ "templates.delete": undefined });
+    const server = await makeServerWithTools(client);
+    const res = await callTool(server, "podyard_delete_template", {
+      templateId: "tpl_1",
+    });
+    expect(client.calls["templates.delete"][0]).toEqual(["tpl_1"]);
+    expect(JSON.parse((res as any).content[0].text)).toEqual({
+      deleted: "tpl_1",
+    });
+  });
+
+  it("podyard_exec_stream collects NDJSON events into a result", async () => {
+    const events = [
+      { type: "stdout", data: "hello " },
+      { type: "stderr", data: "warn\n" },
+      { type: "stdout", data: "world" },
+      { type: "exit", exitCode: 0 },
+    ];
+    const client = makeClient();
+    // The real SDK's execStream returns an async generator directly (not a
+    // promise), so bypass the `record` wrapper which would wrap it in a promise.
+    client.execStream = async function* (_id: string, _input: unknown) {
+      client.calls["execStream"] ??= [];
+      client.calls["execStream"].push([_id, _input]);
+      for (const ev of events) {
+        yield ev;
+      }
+    } as typeof client.execStream;
+    const server = await makeServerWithTools(client);
+    const res = await callTool(server, "podyard_exec_stream", {
+      podId: "pod_1",
+      argv: ["echo", "world"],
+    });
+    expect(client.calls["execStream"][0]).toEqual([
+      "pod_1",
+      {
+        argv: ["echo", "world"],
+        cwd: undefined,
+        env: undefined,
+        timeoutSeconds: undefined,
+      },
+    ]);
+    const body = JSON.parse((res as any).content[0].text);
+    expect(body).toEqual({
+      exitCode: 0,
+      stdout: "hello world",
+      stderr: "warn\n",
+      streamed: true,
+    });
+  });
+
+  it("podyard_create_webhook forwards url, events and active", async () => {
+    const client = makeClient({
+      "webhooks.create": {
+        id: "wh_1",
+        url: "https://x.dev/hook",
+        active: true,
+      },
+    });
+    const server = await makeServerWithTools(client);
+    const res = await callTool(server, "podyard_create_webhook", {
+      url: "https://x.dev/hook",
+      events: ["pod.created"],
+      active: true,
+    });
+    expect(client.calls["webhooks.create"][0]).toEqual([
+      { url: "https://x.dev/hook", events: ["pod.created"], active: true },
+    ]);
+    expect(JSON.parse((res as any).content[0].text).id).toBe("wh_1");
+  });
+
+  it("podyard_delete_webhook calls webhooks.delete", async () => {
+    const client = makeClient({ "webhooks.delete": undefined });
+    const server = await makeServerWithTools(client);
+    const res = await callTool(server, "podyard_delete_webhook", {
+      webhookId: "wh_1",
+    });
+    expect(client.calls["webhooks.delete"][0]).toEqual(["wh_1"]);
+    expect(JSON.parse((res as any).content[0].text)).toEqual({
+      deleted: "wh_1",
+    });
+  });
+
+  it("podyard_list_keys calls keys.list with no arguments", async () => {
+    const client = makeClient({
+      "keys.list": { items: [{ id: "key_1", label: "ci" }], hasMore: false },
+    });
+    const server = await makeServerWithTools(client);
+    const res = await callTool(server, "podyard_list_keys", {});
+    expect(client.calls["keys.list"][0]).toEqual([]);
+    expect(JSON.parse((res as any).content[0].text).items[0].id).toBe("key_1");
+  });
+
+  it("podyard_create_key forwards label and kind", async () => {
+    const client = makeClient({
+      "keys.create": { id: "key_2", key: "pyd_test_ab_cd", label: "ci" },
+    });
+    const server = await makeServerWithTools(client);
+    const res = await callTool(server, "podyard_create_key", {
+      label: "ci",
+      kind: "test",
+    });
+    expect(client.calls["keys.create"][0]).toEqual([
+      { label: "ci", kind: "test" },
+    ]);
+    expect(JSON.parse((res as any).content[0].text).key).toBe("pyd_test_ab_cd");
+  });
+
+  it("podyard_revoke_key calls keys.revoke", async () => {
+    const client = makeClient({ "keys.revoke": undefined });
+    const server = await makeServerWithTools(client);
+    const res = await callTool(server, "podyard_revoke_key", {
+      keyId: "key_1",
+    });
+    expect(client.calls["keys.revoke"][0]).toEqual(["key_1"]);
+    expect(JSON.parse((res as any).content[0].text)).toEqual({
+      revoked: "key_1",
+    });
   });
 });

@@ -1,0 +1,37 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "extends": ["ultracite/biome/core", "ultracite/biome/type-aware"],
+  "linter": {
+    "rules": {
+      "suspicious": {
+        "noExplicitAny": "error"
+      },
+      "correctness": {
+        "noUnresolvedImports": "off"
+      }
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["tests/**"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noExplicitAny": "off",
+            "useAwait": "off",
+            "useArraySortCompare": "off"
+          },
+          "correctness": {
+            "noUnresolvedImports": "off"
+          },
+          "complexity": {
+            "useLiteralKeys": "off"
+          },
+          "style": {
+            "useConsistentObjectDefinitions": "off"
+          }
+        }
+      }
+    }
+  ]
+}

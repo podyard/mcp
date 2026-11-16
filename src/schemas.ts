@@ -10,7 +10,7 @@ import { z } from "zod";
  */
 
 /** Pattern for a valid Podyard API key. */
-const API_KEY_PATTERN = /^pyd_(live|test)_[A-Za-z0-9]+_[A-Za-z0-9]+$/;
+const API_KEY_PATTERN = /^pyd_(?<env>live|test)_[A-Za-z0-9]+_[A-Za-z0-9]+$/u;
 
 /** Podyard API key. Format: `pyd_live_<id>_<secret>` or `pyd_test_<id>_<secret>`. */
 export const apiKeySchema = z
