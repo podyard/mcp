@@ -62,6 +62,26 @@ exits with a descriptive error if validation fails.
 | `podyard_usage`            | Get usage events for this API key                                 |
 | `podyard_limits`           | Get plan limits and current usage for this API key                |
 
+## Local development (before `@podyard/sdk` is published)
+
+Until `@podyard/sdk` is published to npm, this repo depends on it via a
+packed tarball of the sibling `podyard-sdk` repo:
+
+```jsonc
+// package.json
+"@podyard/sdk": "file:../podyard-sdk/podyard-sdk-0.1.0.tgz"
+```
+
+On a fresh clone, pack the SDK once before installing:
+
+```bash
+cd ../podyard-sdk && pnpm install && pnpm run build && npm pack
+cd ../podyard-mcp && pnpm install
+```
+
+Once `@podyard/sdk` is published, switch the dependency to `^0.1.0` and
+remove the tarball.
+
 ## License
 
-Apache-2.0 — see [LICENSE](../../LICENSE).
+Apache-2.0 — see [LICENSE](./LICENSE).

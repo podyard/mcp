@@ -2,6 +2,7 @@
   "name": "@podyard/mcp",
   "version": "0.1.0",
   "description": "Podyard MCP server - expose Podyard sandboxes to MCP-capable clients",
+  "license": "Apache-2.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
