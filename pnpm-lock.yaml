@@ -12,8 +12,8 @@ importers:
         specifier: ^1.32.2
         version: 1.32.2(zod@4.6.7)
       '@podyard/sdk':
-        specifier: file:../podyard-sdk/podyard-sdk-0.1.0.tgz
-        version: file:../podyard-sdk/podyard-sdk-0.1.0.tgz
+        specifier: ^0.1.0
+        version: 0.1.0
       '@t3-oss/env-core':
         specifier: ^0.13.11
         version: 0.13.11(typescript@5.9.3)(zod@4.6.7)
@@ -248,9 +248,8 @@ packages:
   '@oxc-project/types@0.156.0':
     resolution: {integrity: sha512-1Duyg48TdJNdyhEB8Xn1L36bT9Pv6GUtlKjHxOys8xkaF/rQq3XJE+bAurSK/AgIz5mGFsb77cn9Pb20+WCScw==}
 
-  '@podyard/sdk@file:../podyard-sdk/podyard-sdk-0.1.0.tgz':
-    resolution: {integrity: sha512-8UpmmGTHZzNfC0dVWzwrb/5y2raHBQR1KzDc3aa6C5xwaVT0dQZn2O9b116VPX8VekuKGgo7avr/HggxN74ozw==, tarball: file:../podyard-sdk/podyard-sdk-0.1.0.tgz}
-    version: 0.1.0
+  '@podyard/sdk@0.1.0':
+    resolution: {integrity: sha512-1sqEDNkKi5j17zJwIrbhWnPRNtrs40BrjRS0BQ5cQcJqY2pvSyDToxoS2GVX7eQyNJSxIom1/WlsSxkjGVvzCw==}
 
   '@rolldown/binding-android-arm-eabi@1.2.19':
     resolution: {integrity: sha512-e+Ebe0WT+9tbXmNKPIiC8YrWAHYwug3m6i4p3rZGGulfZri1jtI4HslT+OZnFf/OIHowWF71DTlHwXBP2SiA7A==}
@@ -1501,7 +1500,7 @@ snapshots:
 
   '@oxc-project/types@0.156.0': {}
 
-  '@podyard/sdk@file:../podyard-sdk/podyard-sdk-0.1.0.tgz':
+  '@podyard/sdk@0.1.0':
     dependencies:
       '@frontal-labs/error': 0.7.0
       '@frontal-labs/sandbox-sdk': 0.2.0
