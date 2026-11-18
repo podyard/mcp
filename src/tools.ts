@@ -1,5 +1,5 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import type { PodyardClient } from "@podyard/sdk";
+import type { Podyard } from "@podyard/sdk";
 import { z } from "zod";
 
 const POD_ID = z.string().describe("Podyard pod ID, e.g. pod_01HXYZ...");
@@ -82,10 +82,7 @@ export const TOOLS = [
  * Register all Podyard tools on an MCP server. Tools map 1:1 onto the
  * Podyard API verbs (which map 1:1 onto engine verbs); nothing is invented.
  */
-export function registerPodyardTools(
-  server: McpServer,
-  client: PodyardClient
-): void {
+export function registerPodyardTools(server: McpServer, client: Podyard): void {
   // ------------------------------------------------------------------
   // Pods
   // ------------------------------------------------------------------

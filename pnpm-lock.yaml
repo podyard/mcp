@@ -12,8 +12,8 @@ importers:
         specifier: ^1.32.2
         version: 1.32.2(zod@4.6.7)
       '@podyard/sdk':
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.2.1
+        version: 0.2.1
       '@t3-oss/env-core':
         specifier: ^0.13.11
         version: 0.13.11(typescript@5.9.3)(zod@4.6.7)
@@ -304,10 +304,6 @@ packages:
   '@frontal-labs/error@0.7.0':
     resolution: {integrity: sha512-46mjctRgI7Arlcw8DzTRKhG1taE7OqCJSsbnMnrXQhJJHil1KX4M7XhgzB5EXVKZHytrfsP/YsIVedkBuRASkg==}
     engines: {node: '>=22'}
-
-  '@frontal-labs/sandbox-sdk@0.2.0':
-    resolution: {integrity: sha512-dJMSlY6r+ShpZPhxp5zHA6iKctW9nzf+U7/Csu5lSEpyqYuShAWgvUTbARZv4t5LZ3HOE9Hwxdt2XidhmO9G8g==}
-    engines: {node: '>=20.0.0'}
 
   '@hono/node-server@2.1.8':
     resolution: {integrity: sha512-jdf7FHh6A1lzjpHHQUgxsg2GeER2vMetnAOfeActzcoli6jamlK+NAwL6Dsr5Fl3BS3tYUQzCdtZjU8Qxv7bEA==}
@@ -604,8 +600,9 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@podyard/sdk@0.1.0':
-    resolution: {integrity: sha512-1sqEDNkKi5j17zJwIrbhWnPRNtrs40BrjRS0BQ5cQcJqY2pvSyDToxoS2GVX7eQyNJSxIom1/WlsSxkjGVvzCw==}
+  '@podyard/sdk@0.2.1':
+    resolution: {integrity: sha512-VL9FJnVeuvB0regaeu0Xl79dJ0hN/1St+Oe0ZdTQY8kN5/Bqugneoc55Ov3qW3Ys84cu5x0jUAhFdrvWydVPlA==}
+    engines: {node: '>=22'}
 
   '@rolldown/binding-android-arm-eabi@1.2.19':
     resolution: {integrity: sha512-e+Ebe0WT+9tbXmNKPIiC8YrWAHYwug3m6i4p3rZGGulfZri1jtI4HslT+OZnFf/OIHowWF71DTlHwXBP2SiA7A==}
@@ -895,18 +892,6 @@ packages:
 
   '@types/node@25.9.9':
     resolution: {integrity: sha512-b4e2xxj/yMeT2hNlD6x7zNFiQK2Dlmkb9CQ6v3/1G2RezKN4YS2lcEv8lzGm1mhs4f2lM4yNAMI/zUDBZBBt7w==}
-
-  '@ulid/browser@0.1.0':
-    resolution: {integrity: sha512-61s019zbnoSFedvnh84ti74Qru00ODOYqNV8vErLNzP6DrRDAYrA04iF+/AMA8kgPCs1yw3hwNb30AC7iibt/g==}
-
-  '@ulid/node@0.1.0':
-    resolution: {integrity: sha512-zfyumE7DuhXXRTB89Mnae6d5OkIBOASA7KPoz9f7C+lVD53sWLj8SqdGdS7l5WubWMALAGmh41AhRPCgDDeGaA==}
-
-  '@ulid/shared@0.1.0':
-    resolution: {integrity: sha512-zsJXIRUKDVtwPgCIyfFoxrypT202X3LsMa1umuax+jBfdqp1DrV3a0DvXHrabyw1fbo9s7u7iITOjrxNw1xPwA==}
-
-  '@ulid/ulid@0.1.0':
-    resolution: {integrity: sha512-vRXxIV5be/iIHGwEmVSiXveHGRYi2+S10+3OPq7wWwYouXCIzClHuvH5NyrqYfniIKSAXOv2SrEy3xVQNVUxLQ==}
 
   '@vitest/expect@4.1.12':
     resolution: {integrity: sha512-vFlTt+YEu9WBpNjdGayNmlMVzrWPi1+sv853/7t2FU7hpO5gAFBKHzQmkCq5Xjpr+evegF2994LQT3hF3mRlqQ==}
@@ -2186,11 +2171,6 @@ snapshots:
 
   '@frontal-labs/error@0.7.0': {}
 
-  '@frontal-labs/sandbox-sdk@0.2.0':
-    dependencies:
-      '@ulid/ulid': 0.1.0
-      zod: 4.6.7
-
   '@hono/node-server@2.1.8(hono@4.13.18)':
     dependencies:
       hono: 4.13.18
@@ -2366,10 +2346,10 @@ snapshots:
   '@oxlint/binding-win32-x64-msvc@1.94.0':
     optional: true
 
-  '@podyard/sdk@0.1.0':
+  '@podyard/sdk@0.2.1':
     dependencies:
       '@frontal-labs/error': 0.7.0
-      '@frontal-labs/sandbox-sdk': 0.2.0
+      zod: 4.6.7
 
   '@rolldown/binding-android-arm-eabi@1.2.19':
     optional: true
@@ -2531,18 +2511,6 @@ snapshots:
   '@types/node@25.9.9':
     dependencies:
       undici-types: 7.24.6
-
-  '@ulid/browser@0.1.0': {}
-
-  '@ulid/node@0.1.0': {}
-
-  '@ulid/shared@0.1.0': {}
-
-  '@ulid/ulid@0.1.0':
-    dependencies:
-      '@ulid/browser': 0.1.0
-      '@ulid/node': 0.1.0
-      '@ulid/shared': 0.1.0
 
   '@vitest/expect@4.1.12':
     dependencies:

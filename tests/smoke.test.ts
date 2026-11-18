@@ -2,7 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { describe, expect, it } from "vitest";
 import { registerPodyardTools, TOOLS } from "../src/tools";
 
-/** A PodyardClient-shaped stub just for construction; the smoke test only
+/** A Podyard-shaped stub just for construction; the smoke test only
  * needs the server to come up and list its tools. */
 function stubClient() {
   return {

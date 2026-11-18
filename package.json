@@ -5,10 +5,6 @@
   "license": "Apache-2.0",
   "sideEffects": false,
   "type": "module",
-  "packageManager": "pnpm@10.34.7",
-  "engines": {
-    "node": ">=22"
-  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -39,7 +35,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.2",
-    "@podyard/sdk": "^0.1.0",
+    "@podyard/sdk": "^0.2.1",
     "@t3-oss/env-core": "^0.13.11",
     "zod": "^4.3.6"
   },
@@ -50,6 +46,10 @@
     "typescript": "^5.9.3",
     "ultracite": "^8.2.1",
     "vitest": "^4.0.18"
+  },
+  "packageManager": "pnpm@10.34.7",
+  "engines": {
+    "node": ">=22"
   },
   "publishConfig": {
     "access": "public"

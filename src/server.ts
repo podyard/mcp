@@ -1,7 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import type { PodyardClientOptions } from "@podyard/sdk";
-import { PodyardClient } from "@podyard/sdk";
+import type { PodyardOptions } from "@podyard/sdk";
+import { Podyard } from "@podyard/sdk";
 import { env } from "./env";
 import { registerPodyardTools } from "./tools";
 
@@ -19,12 +19,12 @@ export interface PodyardMcpOptions {
 export function createPodyardMcpServer(
   options: PodyardMcpOptions = {}
 ): McpServer {
-  const clientOptions: PodyardClientOptions = {
+  const clientOptions: PodyardOptions = {
     apiKey: options.apiKey ?? env.PODYARD_API_KEY,
     baseUrl: options.baseUrl ?? env.PODYARD_BASE_URL,
   };
 
-  const client = new PodyardClient(clientOptions);
+  const client = new Podyard(clientOptions);
   const server = new McpServer({ name: "podyard", version: "0.1.0" });
 
   registerPodyardTools(server, client);
